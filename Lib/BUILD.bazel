@@ -1,0 +1,21 @@
+load("//:dynamic_lib.bzl", "dynamic_library")
+
+filegroup(
+    name = "src",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:__pkg__"],
+)
+
+filegroup(
+    name = "hdrs",
+    srcs = ["Library.hpp"]
+)
+
+dynamic_library(
+    name = "hello",
+    srcs = ["Library.cpp"],
+    hdrs = ["Library.hpp"],
+    defines = ["BUILD_DLL"],
+    strip_include_prefix = "/Lib",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,9 @@
+cc_binary(
+    name = "Runtime",
+    srcs = [
+        "Runtime.cpp",
+    ],
+    deps = [
+        "//Lib:hello",
+    ],
+)
