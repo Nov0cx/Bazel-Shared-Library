@@ -1,6 +1,6 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_import", "cc_library")
 
-names = ["%.dll", "lib%.so", "lib%.dylib"]
+names = ["%s.dll", "lib%s.so", "lib%s.dylib"]
 
 def is_windows(ctx):
     windows_constraint = ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]
@@ -31,22 +31,28 @@ def dynamic_library(
     """A simple windows_dll_library rule for builing a DLL Windows."""
     dll_name_ = ""
     if (is_windows):
-        dll_name_ = names[0].replace("%", name)
+        dll_name_ = names[0] % name
     elif (is_linux):
-        dll_name_ = names[1].replace("%", name)
+        dll_name_ = names[1] % name
     elif (is_macos):
-        dll_name_ = names[2].replace("%", name)
+        dll_name_ = names[2] % name
     else:
         fail("Unsupported platform")
     dll_name = str(dll_name_)
     import_lib_name = name + "_import_lib"
     import_target_name = name + "_dll_import"
 
+    cc_library(
+        name = name + "_hdrs",
+        hdrs = hdrs,
+        strip_include_prefix = strip_include_prefix,
+    )
+
     # Build the shared library
     cc_binary(
         name = dll_name,
-        srcs = srcs + hdrs,
-        deps = deps,
+        srcs = srcs,
+        deps = deps + [":%s_hdrs" % name],
         linkshared = 1,
         **kwargs
     )

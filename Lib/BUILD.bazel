@@ -6,15 +6,10 @@ filegroup(
     visibility = ["//visibility:__pkg__"],
 )
 
-filegroup(
-    name = "hdrs",
-    srcs = ["Library.hpp"]
-)
-
 dynamic_library(
     name = "hello",
-    srcs = ["Library.cpp"],
-    hdrs = ["Library.hpp"],
+    srcs = ["Library.cpp", "src/Other.cpp"],
+    hdrs = ["Library.hpp", "src/Other.hpp"],
     defines = ["BUILD_DLL"],
     strip_include_prefix = "/Lib",
     visibility = ["//visibility:public"],
